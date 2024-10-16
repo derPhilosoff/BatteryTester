@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BatteryTester</string>
+    <string name="startButtonText">Start</string>
+    <string name="appName">Batterietester</string>
+    <string name="volumeLevel">Lautstärke in dB: </string>
+    <string name="volumeResult">0</string>
+    <string name="stopButtonText">Stop</string>
+    <string name="resultTextView">Batterieladung wird hier dargestellt</string>
+    <string name="helpButtonText">Hilfe?</string>
+    <string name="micSensitivityHint">Sensitivity in dB</string>
+    <string name="timeoutHint">Timeout in ms</string>
+    <string name="micSensitivityText">Mikrofonempfindlichkeit</string>
+    <string name="sensitivityUnit">dB</string>
+    <string name="timeOutUnit">ms</string>
+    <string name="resultValueTextView"> </string>
+    <string name="resultTextViewSecondary">"Batterieladung beträgt ca.: "</string>
+    <string name="unknownResult">Unbekannter Batteriestand</string>
+    <string name="resultTextViewErr">Messfehler! Versuchen Sie es erneut.</string>
+</resources>

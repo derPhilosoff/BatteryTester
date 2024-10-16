@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BatteryTester</string>
+    <string name="startButtonText">Start</string>
+    <string name="appName">Batterytester</string>
+    <string name="volumeLevel">Volume level in dB: </string>
+    <string name="volumeResult">0</string>
+    <string name="stopButtonText">Stop</string>
+    <string name="resultTextView">Battery charge will be displayed here</string>
+    <string name="helpButtonText">Help?</string>
+    <string name="micSensitivityHint">Sensitivity in dB</string>
+    <string name="timeoutHint">Timeout in ms</string>
+    <string name="micSensitivityText">Microphone sensitivity</string>
+    <string name="sensitivityUnit">dB</string>
+    <string name="timeOutUnit">ms</string>
+    <string name="resultValueTextView"> </string>
+    <string name="resultTextViewSecondary">"Battery charge is approx.: "</string>
+    <string name="unknownResult">Unknown battery charge</string>
+    <string name="resultTextViewErr">Error! Please try again.</string>
+</resources>

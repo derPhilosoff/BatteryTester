@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkGray2"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:text="@string/appName"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/volumeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_upper_left_corner"
+        android:padding="8sp"
+        android:text="@string/volumeLevel"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appName" />
+
+    <TextView
+        android:id="@+id/volumeResultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_upper_right_corner"
+        android:padding="8sp"
+        android:text="@string/volumeResult"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/volumeProgressBar"
+        app:layout_constraintStart_toEndOf="@+id/volumeTextView" />
+
+    <ProgressBar
+        android:id="@+id/volumeProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:max="100"
+        android:padding="8sp"
+        android:progress="0"
+        android:textColor="@color/textPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/volumeTextView" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/circle"
+        android:text="@string/startButtonText"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultTextView" />
+
+    <Button
+        android:id="@+id/stopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/circle"
+        android:text="@string/stopButtonText"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultTextView" />
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12sp"
+        android:background="@drawable/rounded_left_corners"
+        android:text="@string/resultTextView"
+        android:textColor="@color/textPrimary"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/volumeProgressBar" />
+
+    <TextView
+        android:id="@+id/resultValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12sp"
+        android:background="@drawable/rounded_right_corners"
+        android:text="@string/resultValueTextView"
+        android:textColor="@color/textPrimary"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/resultTextView"
+        app:layout_constraintTop_toBottomOf="@+id/volumeProgressBar" />
+
+    <SeekBar
+        android:id="@+id/timeOutBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:max="200"
+        android:thumbTint="@color/textPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/editTimeOut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/sensitivityBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:max="100"
+        android:thumbTint="@color/textPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/editSensitivity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/sensitivityUnit"
+        android:layout_width="67dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_bottom_right_corner"
+        android:text="@string/sensitivityUnit"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editSensitivity"
+        app:layout_constraintTop_toBottomOf="@+id/sensitivityBar" />
+
+    <EditText
+        android:id="@+id/editSensitivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:autofillHints="Mikrofonsensitivität"
+        android:background="@drawable/rounded_bottom_left_corner"
+        android:hint="@string/micSensitivityHint"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/timeOutBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/timeOutUnit"
+        android:layout_width="67dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_bottom_right_corner"
+        android:text="@string/timeOutUnit"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editTimeOut"
+        app:layout_constraintTop_toBottomOf="@+id/timeOutBar" />
+
+    <EditText
+        android:id="@+id/editTimeOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:autofillHints="Mikrofonsensitivität"
+        android:background="@drawable/rounded_bottom_left_corner"
+        android:hint="@string/timeoutHint"
+        android:inputType="number"
+        android:maxLength="3"
+        android:textAlignment="center"
+        android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/helpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:text="@string/helpButtonText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
