@@ -7,7 +7,7 @@
     <color name="darkGray1">#44FFFFFF</color>
     <color name="darkGray2">#44666666</color>
     <color name="common_border_color">#FFFFFFFF</color>
-    <color name="primary">#FF33FF20</color>
+    <color name="primary">#AA308F20</color>
     <color name="textPrimary">@color/black</color>
     <color name="backgroundPrimary">@color/darkGray2</color>
 </resources>

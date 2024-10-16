@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         // Button zum Starten der Aufnahme
         startButton.visibility = View.VISIBLE
         startButton.setOnClickListener {
+            //TODO hier Mikrofonpermission anfragen, damit Button unclicked bleibt?
             startButton.visibility = View.GONE
             stopButton.visibility = View.VISIBLE
             sensitivityBar.isEnabled = false
@@ -403,7 +404,6 @@ class MainActivity : AppCompatActivity() {
                     resultValueTextView.text = batteryStatus
                 }
 
-                //TODO TESTING
                 stopButton.performClick()
             }
         }
