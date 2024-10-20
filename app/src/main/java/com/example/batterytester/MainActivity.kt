@@ -431,3 +431,4 @@ class MainActivity : AppCompatActivity() {
 //TODO Schönes UI
 //TODO Zeitmessung verifizieren --> Zeitabstände mit Soundgenerator in ms Bereichen
 //TODO Batterie verhält sich anders wenn frisch entladen, bei anderen Temperaturen <-- Help Text!
+//TODO Tests schreiben :(

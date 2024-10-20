@@ -17,4 +17,6 @@
     <string name="resultTextViewSecondary">"Battery charge is approx.: "</string>
     <string name="unknownResult">Unknown battery charge</string>
     <string name="resultTextViewErr">Error! Please try again.</string>
+    <string name="permissionAudio">This app needs the permission to use your microphone to evaluate the charge of a battery.</string>
+    <string name="permissionPermanentlyDeclined">This App doesn\'t work without a microphone. Please change the permissions in the settings.</string>
 </resources>
