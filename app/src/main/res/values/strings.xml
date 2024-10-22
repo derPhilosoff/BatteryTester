@@ -19,4 +19,5 @@
     <string name="resultTextViewErr">Messfehler! Versuchen Sie es erneut.</string>
     <string name="permissionAudio">Diese App benötigt Zugriff auf das Mikrofon des Geräts, damit der Ladestand einer Batterie gemessen werden kann</string>
     <string name="permissionPermanentlyDeclined">Diese App funktioniert nicht ohne Mikrofon, bitte in den Einstellungen die Erlaubnis zur Nutzung erteilen</string>
+    <string name="Settings">Einstellungen</string>
 </resources>

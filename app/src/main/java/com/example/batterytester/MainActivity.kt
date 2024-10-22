@@ -1,12 +1,15 @@
 package com.example.batterytester
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -15,13 +18,12 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import java.nio.ShortBuffer
-import kotlin.math.abs
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultValueTextView: TextView
     private lateinit var resultTextView: TextView
     private lateinit var helpButton: Button
+    private lateinit var settingsButton : Button
 
 
     // Liste zum Speichern der Audio-Werte
@@ -95,23 +98,22 @@ class MainActivity : AppCompatActivity() {
         val timeOutBar = findViewById<SeekBar>(R.id.timeOutBar)
         val editTimeOut = findViewById<EditText>(R.id.editTimeOut)
         timeOutBar.progress = minSilenceDuration
+        settingsButton = findViewById(R.id.settingsButton)
 
         // Button zum Starten der Aufnahme
         startButton.visibility = View.VISIBLE
         startButton.setOnClickListener {
 
             //Mikrofonberechtigung anfragen und  TODO prüfen, ob dauerhaft abgelehnt
-            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            if(!isMicrophonePermissionGranted()){
                 //TODO vollständiges Permissionhandling!
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.RECORD_AUDIO),
-                    0
-                )
-                startButton.text = "BULLSHIT!"
+                requestMicrophonePermission()
+                startButton.visibility = View.GONE
+                stopButton.visibility = View.VISIBLE
             }
 
             else {
+                resultTextView.text ="Mäh"
                 startButton.text = "Start"
                 startButton.visibility = View.GONE
                 stopButton.visibility = View.VISIBLE
@@ -138,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             peakTimestamps.clear()
         }
 
-
+        stopButton.visibility = View.GONE
 
         // Initialen Wert der EditText mit dem Wert der SeekBar synchronisieren
         editSensitivity.setText(noiseThreshold.toString())
@@ -260,6 +262,80 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+    //TODO Permission Funktionen einbauen?
+
+    private fun isMicrophonePermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+    }
+
+    // Berechtigungsanfrage
+    private fun requestMicrophonePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            // Zeige rationale Erklärung, warum die Berechtigung benötigt wird
+            resultTextView.visibility = View.VISIBLE
+            resultTextView.text = "Permission required!"
+        } else {
+            // Fordere Berechtigung an
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
+        }
+    }
+
+    // Ergebnis der Berechtigungsanfrage verarbeiten
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Berechtigung erteilt, beginne mit der Aufnahme
+
+            } else {
+                // Berechtigung verweigert, zeige Fehlermeldung
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+                    // Der Benutzer hat die Berechtigung dauerhaft verweigert
+                    showPermissionDeniedPermanentlyMessage()
+                } else {
+                    // Der Benutzer hat die Berechtigung abgelehnt
+                    showPermissionDeniedMessage()
+                }
+            }
+        }
+    }
+
+    // Fehlermeldung anzeigen, wenn Berechtigung verweigert wurde
+    private fun showPermissionDeniedMessage() {
+        resultTextView.text = "${resultTextView.text} und das finden wir doof."
+    }
+
+    // Fehlermeldung anzeigen, wenn Berechtigung dauerhaft verweigert wurde und Button für Einstellungen
+    private fun showPermissionDeniedPermanentlyMessage() {
+        resultTextView.text = "${resultTextView.text} Änder das mal bitte"
+
+        // Füge einen Button hinzu, der den Benutzer zu den Einstellungen führt
+        val settingsButton: Button = findViewById(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            openAppSettings()
+        }
+        hideUI()
+        settingsButton.visibility = Button.VISIBLE
+
+    }
+
+    private fun hideUI() {
+        helpButton.performClick()
+    }
+
+    // Benutzer zu den App-Einstellungen weiterleiten
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", packageName, null)
+        }
+        startActivity(intent)
+    }
+
+
+    //TODO Permission Funktionen einbauen?
 
     private fun startAudioRecording() {
         val sampleRate = 44100
@@ -435,7 +511,6 @@ class MainActivity : AppCompatActivity() {
 
 //TODO APK auf Handys allgemein
 //TODO Playstore???
-//TODO dB in dB A oder was genau?
 //TODO Eigene Messungen, OBERFLÄCHENMATERIAL!
 //TODO Abfrage welche Batterien es sind (AA, AAA, 9V Blöcke)
 //TODO App Icon Drawable?

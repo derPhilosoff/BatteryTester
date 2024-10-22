@@ -19,4 +19,5 @@
     <string name="resultTextViewErr">Error! Please try again.</string>
     <string name="permissionAudio">This app needs the permission to use your microphone to evaluate the charge of a battery.</string>
     <string name="permissionPermanentlyDeclined">This App doesn\'t work without a microphone. Please change the permissions in the settings.</string>
+    <string name="Settings">Settings</string>
 </resources>
