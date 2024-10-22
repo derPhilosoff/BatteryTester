@@ -15,14 +15,20 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.nio.ShortBuffer
+import kotlin.math.abs
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
+
+    private val RECORD_AUDIO_PERMISSION_CODE = 200
 
     // Flag, um die Aufnahme zu steuern
     @Volatile
@@ -73,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         // UI-Elemente verbinden
         volumeTextView = findViewById(R.id.volumeTextView)
         volumeResult = findViewById(R.id.volumeResultTextView)
@@ -92,15 +99,29 @@ class MainActivity : AppCompatActivity() {
         // Button zum Starten der Aufnahme
         startButton.visibility = View.VISIBLE
         startButton.setOnClickListener {
-            //TODO hier Mikrofonpermission anfragen, damit Button unclicked bleibt?
-            startButton.visibility = View.GONE
-            stopButton.visibility = View.VISIBLE
-            sensitivityBar.isEnabled = false
-            editSensitivity.isEnabled = false
-            timeOutBar.isEnabled = false
-            editTimeOut.isEnabled = false
-            helpButton.isEnabled = false
-            startAudioRecording()
+
+            //Mikrofonberechtigung anfragen und  TODO prüfen, ob dauerhaft abgelehnt
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+                //TODO vollständiges Permissionhandling!
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    0
+                )
+                startButton.text = "BULLSHIT!"
+            }
+
+            else {
+                startButton.text = "Start"
+                startButton.visibility = View.GONE
+                stopButton.visibility = View.VISIBLE
+                sensitivityBar.isEnabled = false
+                editSensitivity.isEnabled = false
+                timeOutBar.isEnabled = false
+                editTimeOut.isEnabled = false
+                helpButton.isEnabled = false
+                startAudioRecording()
+            }
         }
 
         // Button zum Stoppen der Aufnahme
@@ -246,14 +267,6 @@ class MainActivity : AppCompatActivity() {
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT
         val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
 
-
-        //TODO vollständiges Permissionhandling!
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.RECORD_AUDIO),
-            0
-        )
-
         val audioRecord = if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.RECORD_AUDIO
@@ -339,7 +352,6 @@ class MainActivity : AppCompatActivity() {
         var sumOfSquares = 0.0
         val sampleCount = buffer.size
 
-        // Schritt 1: Berechne die Summe der Quadrate der Short-Werte
         for (sample in buffer) {
             sumOfSquares += sample * sample
         }
@@ -348,14 +360,14 @@ class MainActivity : AppCompatActivity() {
         val rms = sqrt(sumOfSquares / sampleCount)
 
         // Schritt 3: Berechne den Schallpegel in Dezibel
-        // Referenzwert ist 32767 (der maximale Wert eines 16-Bit-Samples)
-        // Theoretisch sollte in der dB Berechnung rms durch den Referenzwert geteilt werden
-        // Scheinbar funktioniert aber rms trotzdem, ohne etwas zu ändern
-        // Gemessene Werte verifiziert durch externe App "Sound Meter"
-        // val reference = 32767.0
-        val db = 20 * log10(rms)
+        // Referenzwert für Schalldruckmessung in dB ist der Wert, bei dem 0 dB gemessen werden
+        // Für elektrische Akustiksignale kann hier der kleinste Wert gewählt werden, der
+        // im Bufffer aufgenommen werden kann, also 1
+        val reference = 1.0
+        val db = 20 * log10(rms/reference)
 
         return db
+
     }
 
     // Methode zur Erkennung eines Ereignisses
