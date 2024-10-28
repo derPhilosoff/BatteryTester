@@ -23,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
+import org.w3c.dom.Text
 import java.nio.ShortBuffer
+import kotlin.concurrent.thread
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -48,9 +50,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var helpButton: Button
     private lateinit var settingsButton : Button
 
+    //TODO Delete Test Textview
+    private lateinit var timeStamp: TextView
 
-    // Liste zum Speichern der Audio-Werte
-    private val audioDataList = mutableListOf<Short>()
+
+    // Liste zum Speichern der Audio-Werte für Debugging
+    //private val audioDataList = mutableListOf<Short>()
 
     //Map zum Hinterlegen der Dämpfungsfaktoren
     private val faktorLadung = mapOf(
@@ -73,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     private var noiseThreshold = 50
 
     // Zeitfenster für Stille nach einem Klatschen, um ein weiteres Klatschen zu erkennen (in Millisekunden)
-    private var minSilenceDuration = 100
+    private var minSilenceDuration = 20
 
     // Letzter Zeitpunkt, an dem ein Klatschen erkannt wurde
     private var lastPeakTimestamp: Long = 0
@@ -100,12 +105,18 @@ class MainActivity : AppCompatActivity() {
         timeOutBar.progress = minSilenceDuration
         settingsButton = findViewById(R.id.settingsButton)
 
+        //Textview für Debugging zum Anzeigen der Intervalle
+        timeStamp = findViewById(R.id.testTimeStamps)
+        timeStamp.visibility = View.VISIBLE
+
         // Button zum Starten der Aufnahme
         startButton.visibility = View.VISIBLE
         startButton.setOnClickListener {
 
             //Mikrofonberechtigung anfragen und  TODO prüfen, ob dauerhaft abgelehnt
-            if(!isMicrophonePermissionGranted()){
+            //TODO uncomment
+            /*
+            // if(!isMicrophonePermissionGranted()){
                 //TODO vollständiges Permissionhandling!
                 requestMicrophonePermission()
                 startButton.visibility = View.GONE
@@ -113,8 +124,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             else {
-                resultTextView.text ="Mäh"
-                startButton.text = "Start"
+
+             */
                 startButton.visibility = View.GONE
                 stopButton.visibility = View.VISIBLE
                 sensitivityBar.isEnabled = false
@@ -123,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                 editTimeOut.isEnabled = false
                 helpButton.isEnabled = false
                 startAudioRecording()
-            }
+
         }
 
         // Button zum Stoppen der Aufnahme
@@ -140,7 +151,6 @@ class MainActivity : AppCompatActivity() {
             peakTimestamps.clear()
         }
 
-        stopButton.visibility = View.GONE
 
         // Initialen Wert der EditText mit dem Wert der SeekBar synchronisieren
         editSensitivity.setText(noiseThreshold.toString())
@@ -215,7 +225,7 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 val input = s.toString()
                 if (input.isNotEmpty()) {
-                    val value = input.toIntOrNull() ?: 40
+                    val value = input.toIntOrNull() ?: 1
                     // Prüfen, ob der Wert innerhalb der Grenzen liegt
                     if (value in 0..timeOutBar.max) {
                         minSilenceDuration = value
@@ -265,6 +275,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //TODO Permission Funktionen einbauen?
+    /*
 
     private fun isMicrophonePermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
@@ -275,10 +286,11 @@ class MainActivity : AppCompatActivity() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
             // Zeige rationale Erklärung, warum die Berechtigung benötigt wird
             resultTextView.visibility = View.VISIBLE
-            resultTextView.text = "Permission required!"
+
         } else {
             // Fordere Berechtigung an
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
+            resultTextView.text = "Permission required!"
         }
     }
 
@@ -335,13 +347,15 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+     */
+
     //TODO Permission Funktionen einbauen?
 
     private fun startAudioRecording() {
-        val sampleRate = 44100
+        val sampleRate = 48000
         val channelConfig = AudioFormat.CHANNEL_IN_MONO
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT
-        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
+        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat) /2
 
         val audioRecord = if (ActivityCompat.checkSelfPermission(
                 this,
@@ -373,24 +387,30 @@ class MainActivity : AppCompatActivity() {
 
                 if (readSize > 0) {
                     val shortBuffer = ShortBuffer.wrap(audioBuffer)
+
                     val volumeLevelDb = calculateVolumeInDB(audioBuffer)
 
                     //Alternative zur Berechnung in Decibel; Genauere Messergebnisse
                     // val volumeLevel = calculateVolume(shortBuffer)
 
-                    // Speichere die Werte aus dem Buffer in der Liste
+                    // Speichere die Werte aus dem Buffer in der Liste für Debugging
+                    /*
                     for (i in 0 until shortBuffer.limit()) {
-                        audioDataList.add(shortBuffer[i])
+                       audioDataList.add(shortBuffer[i])
                     }
+                    */
 
-                    // Erkenne Klatschen anhand der Lautstärke
-                    detectPeak(volumeLevelDb.roundToInt())
-
-                    // Aktualisiere die Lautstärke im UI-Thread
-                    runOnUiThread {
-                        volumeResult.text = "${volumeLevelDb.roundToInt()}"
-                        volumeProgressBar.progress = volumeLevelDb.roundToInt()
-                    }
+                    // Audioprocessing in einem seperaten Thread mit Priorität
+                    Thread{
+                        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO)
+                        // Erkenne Peaks anhand der Lautstärke
+                        detectPeak(volumeLevelDb)
+                        // Aktualisiere die Lautstärke im UI-Thread
+                        runOnUiThread {
+                            volumeResult.text = "${volumeLevelDb.roundToInt()}"
+                            volumeProgressBar.progress = volumeLevelDb.roundToInt()
+                        }
+                    }.start()
                 }
             }
             // Beenden der Aufnahme und Freigeben der Ressourcen
@@ -404,7 +424,7 @@ class MainActivity : AppCompatActivity() {
     private fun stopAudioRecording() {
         isRecording = false
         // Ausgabe der gespeicherten Daten (nur zum Debuggen)
-        println("Gespeicherte Audio-Daten: ${audioDataList.size} Samples")
+        //println("Gespeicherte Audio-Daten: ${audioDataList.size} Samples")
     }
 
 
@@ -447,10 +467,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Methode zur Erkennung eines Ereignisses
-    private fun detectPeak(volumeLevelDb: Int) {
+    private fun detectPeak(volumeLevelDb: Double) {
         // Erkenne ein Ereignis, wenn die Lautstärke den Schwellenwert überschreitet
         if (volumeLevelDb > noiseThreshold) {
-            val currentTimestamp = SystemClock.elapsedRealtime()
+            val currentTimestamp = SystemClock.elapsedRealtimeNanos()/1000000
+
 
             // Stelle sicher, dass eine gewisse Stille seit dem letzten Ereignis vergangen ist
             if (currentTimestamp - lastPeakTimestamp > minSilenceDuration) {
@@ -475,6 +496,7 @@ class MainActivity : AppCompatActivity() {
             val interval1 : Long = peakTimestamps[1] - peakTimestamps[0]
             val interval2 : Long = peakTimestamps[2] - peakTimestamps[1]
 
+
             val factor : Double = interval2.toDouble() / interval1.toDouble()
 
             val batteryStatus = getBatteryStatus(factor)
@@ -491,8 +513,11 @@ class MainActivity : AppCompatActivity() {
                     resultTextView.text = getString(R.string.resultTextViewSecondary)
                     resultValueTextView.text = batteryStatus
                 }
+                //stopButton.performClick()
+                //Anzeigen der gemessenen Intervalle in Nanosekunden für Debugging
+                timeStamp.text = "$interval1 ms, $interval2 ms"
 
-                stopButton.performClick()
+
             }
         }
     }
