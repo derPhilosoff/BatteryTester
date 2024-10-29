@@ -24,20 +24,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <!-- Textview zum Anzeigen der Zeitintervalle der Messungen -->
     <TextView
         android:id="@+id/testTimeStamps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner"
         android:text="Intervals"
-        android:visibility="gone"
         android:textAlignment="center"
-        android:textColor="@color/textPrimary"
+        android:textColor="#FFFF0000"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/sensitivityBar"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appName" />
 
 
     <TextView

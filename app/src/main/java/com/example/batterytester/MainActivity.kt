@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
         //Textview für Debugging zum Anzeigen der Intervalle
         timeStamp = findViewById(R.id.testTimeStamps)
-        timeStamp.visibility = View.VISIBLE
+
 
         // Button zum Starten der Aufnahme
         startButton.visibility = View.VISIBLE
@@ -251,6 +251,9 @@ class MainActivity : AppCompatActivity() {
                 editSensitivity.visibility = View.VISIBLE
                 timeOutBar.visibility = View.VISIBLE
                 editTimeOut.visibility = View.VISIBLE
+
+                //Für Debugging Anzeige der aufgenommenen Intervalle
+                timeStamp.visibility = View.GONE
             }
             else{
                 isHelpClicked = true
@@ -266,6 +269,9 @@ class MainActivity : AppCompatActivity() {
                 timeOutBar.visibility = View.GONE
                 editTimeOut.visibility = View.GONE
                 stopAudioRecording()
+
+                //Für Debugging Anzeige der aufgenommenen Intervalle
+                timeStamp.visibility = View.VISIBLE
             }
         }
 
@@ -470,7 +476,7 @@ class MainActivity : AppCompatActivity() {
     private fun detectPeak(volumeLevelDb: Double) {
         // Erkenne ein Ereignis, wenn die Lautstärke den Schwellenwert überschreitet
         if (volumeLevelDb > noiseThreshold) {
-            val currentTimestamp = SystemClock.elapsedRealtimeNanos()/1000000
+            val currentTimestamp = SystemClock.elapsedRealtimeNanos()
 
 
             // Stelle sicher, dass eine gewisse Stille seit dem letzten Ereignis vergangen ist
@@ -513,11 +519,11 @@ class MainActivity : AppCompatActivity() {
                     resultTextView.text = getString(R.string.resultTextViewSecondary)
                     resultValueTextView.text = batteryStatus
                 }
-                //stopButton.performClick()
+
                 //Anzeigen der gemessenen Intervalle in Nanosekunden für Debugging
-                timeStamp.text = "$interval1 ms, $interval2 ms"
+                timeStamp.text = "$interval1 ns, $interval2 ns"
 
-
+                stopButton.performClick()
             }
         }
     }
