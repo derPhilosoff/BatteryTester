@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var helpButton: Button
     private lateinit var settingsButton : Button
 
-    //TODO Delete Test Textview
+    //Textview zum Anzeigen der Intervalle zwecks Debugging
     private lateinit var timeStamp: TextView
 
 
@@ -148,7 +148,6 @@ class MainActivity : AppCompatActivity() {
             timeOutBar.isEnabled = true
             editTimeOut.isEnabled = true
             helpButton.isEnabled = true
-            peakTimestamps.clear()
         }
 
 
@@ -431,6 +430,7 @@ class MainActivity : AppCompatActivity() {
         isRecording = false
         // Ausgabe der gespeicherten Daten (nur zum Debuggen)
         //println("Gespeicherte Audio-Daten: ${audioDataList.size} Samples")
+        peakTimestamps.clear()
     }
 
 
