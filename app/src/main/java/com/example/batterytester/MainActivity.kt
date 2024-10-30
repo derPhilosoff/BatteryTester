@@ -1,15 +1,12 @@
 package com.example.batterytester
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -18,25 +15,21 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
-import org.w3c.dom.Text
 import java.nio.ShortBuffer
-import kotlin.concurrent.thread
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
 
-    private val RECORD_AUDIO_PERMISSION_CODE = 200
 
     // Flag, um die Aufnahme zu steuern
     @Volatile
     private var isRecording = false
+
+    //Flag um das Hilfemenü umzuschalten
     private var isHelpClicked = false
 
     // AudioRecord und UI-Komponenten
@@ -395,7 +388,7 @@ class MainActivity : AppCompatActivity() {
 
                     val volumeLevelDb = calculateVolumeInDB(audioBuffer)
 
-                    //Alternative zur Berechnung in Decibel; Genauere Messergebnisse
+                    // Alternative zur Berechnung in Decibel; Genauere Messergebnisse
                     // val volumeLevel = calculateVolume(shortBuffer)
 
                     // Speichere die Werte aus dem Buffer in der Liste für Debugging
@@ -448,6 +441,7 @@ class MainActivity : AppCompatActivity() {
         return (sum / buffer.limit()).toInt()
     }
      */
+
 
     //Funktion zur Berechnung der Lautstärke in dB
     private fun calculateVolumeInDB(buffer: ShortArray):Double{
