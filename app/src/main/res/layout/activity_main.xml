@@ -158,7 +158,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
-        android:max="200"
+        android:max="50"
         android:thumbTint="@color/textPrimary"
         app:layout_constraintBottom_toTopOf="@+id/editTimeOut"
         app:layout_constraintEnd_toEndOf="parent"

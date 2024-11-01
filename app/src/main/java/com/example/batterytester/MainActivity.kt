@@ -105,20 +105,6 @@ class MainActivity : AppCompatActivity() {
         // Button zum Starten der Aufnahme
         startButton.visibility = View.VISIBLE
         startButton.setOnClickListener {
-
-            //Mikrofonberechtigung anfragen und  TODO prüfen, ob dauerhaft abgelehnt
-            //TODO uncomment
-            /*
-            // if(!isMicrophonePermissionGranted()){
-                //TODO vollständiges Permissionhandling!
-                requestMicrophonePermission()
-                startButton.visibility = View.GONE
-                stopButton.visibility = View.VISIBLE
-            }
-
-            else {
-
-             */
                 startButton.visibility = View.GONE
                 stopButton.visibility = View.VISIBLE
                 sensitivityBar.isEnabled = false
@@ -127,7 +113,6 @@ class MainActivity : AppCompatActivity() {
                 editTimeOut.isEnabled = false
                 helpButton.isEnabled = false
                 startAudioRecording()
-
         }
 
         // Button zum Stoppen der Aufnahme
@@ -227,8 +212,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        //TODO Hilfetext schreiben
-
         // Button für Hilfe
         helpButton.setOnClickListener {
             if (isHelpClicked){
@@ -266,100 +249,21 @@ class MainActivity : AppCompatActivity() {
                 timeStamp.visibility = View.VISIBLE
             }
         }
-
-
-
     }
 
-
-    //TODO Permission Funktionen einbauen?
-    /*
-
-    private fun isMicrophonePermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-    }
-
-    // Berechtigungsanfrage
-    private fun requestMicrophonePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-            // Zeige rationale Erklärung, warum die Berechtigung benötigt wird
-            resultTextView.visibility = View.VISIBLE
-
-        } else {
-            // Fordere Berechtigung an
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
-            resultTextView.text = "Permission required!"
-        }
-    }
-
-    // Ergebnis der Berechtigungsanfrage verarbeiten
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Berechtigung erteilt, beginne mit der Aufnahme
-
-            } else {
-                // Berechtigung verweigert, zeige Fehlermeldung
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-                    // Der Benutzer hat die Berechtigung dauerhaft verweigert
-                    showPermissionDeniedPermanentlyMessage()
-                } else {
-                    // Der Benutzer hat die Berechtigung abgelehnt
-                    showPermissionDeniedMessage()
-                }
-            }
-        }
-    }
-
-    // Fehlermeldung anzeigen, wenn Berechtigung verweigert wurde
-    private fun showPermissionDeniedMessage() {
-        resultTextView.text = "${resultTextView.text} und das finden wir doof."
-    }
-
-    // Fehlermeldung anzeigen, wenn Berechtigung dauerhaft verweigert wurde und Button für Einstellungen
-    private fun showPermissionDeniedPermanentlyMessage() {
-        resultTextView.text = "${resultTextView.text} Änder das mal bitte"
-
-        // Füge einen Button hinzu, der den Benutzer zu den Einstellungen führt
-        val settingsButton: Button = findViewById(R.id.settingsButton)
-        settingsButton.setOnClickListener {
-            openAppSettings()
-        }
-        hideUI()
-        settingsButton.visibility = Button.VISIBLE
-
-    }
-
-    private fun hideUI() {
-        helpButton.performClick()
-    }
-
-    // Benutzer zu den App-Einstellungen weiterleiten
-    private fun openAppSettings() {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", packageName, null)
-        }
-        startActivity(intent)
-    }
-
-
-     */
-
-    //TODO Permission Funktionen einbauen?
 
     private fun startAudioRecording() {
         val sampleRate = 48000
         val channelConfig = AudioFormat.CHANNEL_IN_MONO
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT
-        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat) /2
+        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
 
         val audioRecord = if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+
             return
         } else {
             AudioRecord(
@@ -384,15 +288,10 @@ class MainActivity : AppCompatActivity() {
                 val readSize = audioRecord.read(audioBuffer, 0, audioBuffer.size)
 
                 if (readSize > 0) {
-                    val shortBuffer = ShortBuffer.wrap(audioBuffer)
-
                     val volumeLevelDb = calculateVolumeInDB(audioBuffer)
 
-                    // Alternative zur Berechnung in Decibel; Genauere Messergebnisse
-                    // val volumeLevel = calculateVolume(shortBuffer)
-
-                    // Speichere die Werte aus dem Buffer in der Liste für Debugging
                     /*
+                    // Speichere die Werte aus dem Buffer in der Liste für Debugging
                     for (i in 0 until shortBuffer.limit()) {
                        audioDataList.add(shortBuffer[i])
                     }
@@ -427,27 +326,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    /*
-    Methode zur Berechnung der Lautstärke aus dem ShortBuffer
-    Falls Berechnung mit dB zu ungenau kann diese Funktion genutzt werden
-
-    private fun calculateVolume(buffer: ShortBuffer): Int {
-        var sum = 0.0
-        for (i in 0 until buffer.limit()) {
-            sum += abs(buffer[i].toDouble())
-        }
-        // Normalisiere den Wert für die ProgressBar (zwischen 0 und 32767)
-        return (sum / buffer.limit()).toInt()
-    }
-     */
-
-
     //Funktion zur Berechnung der Lautstärke in dB
     private fun calculateVolumeInDB(buffer: ShortArray):Double{
         var sumOfSquares = 0.0
         val sampleCount = buffer.size
 
+        // Schritt 1: Quadrieren und Summieren der Werte im AudioBuffer
         for (sample in buffer) {
             sumOfSquares += sample * sample
         }
@@ -490,7 +374,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Methode zur Berechnung der Zeitintervalle zwischen den Klatschern
+    // Methode zur Berechnung der Zeitintervalle zwischen den Ereignissen
     private fun calculatePeakIntervals() {
         if (peakTimestamps.size == 3) {
             val interval1 : Long = peakTimestamps[1] - peakTimestamps[0]
@@ -534,13 +418,9 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-//TODO APK auf Handys allgemein
-//TODO Playstore???
-//TODO Eigene Messungen, OBERFLÄCHENMATERIAL!
+//TODO Hilfetext schreiben
+//TODO Permission Funktionen einbauen?
+//TODO APK auf Handys allgemein <-- Hilfetext mit Berechtigungsproblemen!
 //TODO Abfrage welche Batterien es sind (AA, AAA, 9V Blöcke)
 //TODO App Icon Drawable?
-//TODO App Theme Colors --> Mehr davon
-//TODO Schönes UI
-//TODO Zeitmessung verifizieren --> Zeitabstände mit Soundgenerator in ms Bereichen
 //TODO Batterie verhält sich anders wenn frisch entladen, bei anderen Temperaturen <-- Help Text!
-//TODO Tests schreiben :(
