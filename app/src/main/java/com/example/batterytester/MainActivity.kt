@@ -19,7 +19,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import java.nio.ShortBuffer
 import kotlin.math.log10
+import kotlin.math.round
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
@@ -41,11 +43,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultValueTextView: TextView
     private lateinit var resultTextView: TextView
     private lateinit var helpButton: Button
-    private lateinit var settingsButton : Button
 
-    //Textview zum Anzeigen der Intervalle zwecks Debugging
+    //Textviews und Button zum Anzeigen der Intervalle und des Abminderungsfaktors zwecks Debugging
     private lateinit var timeStamp: TextView
-
+    private lateinit var factorTextView: TextView
+    private lateinit var dataButton: Button
+    private var isDataButtonClicked: Boolean = false
 
     // Liste zum Speichern der Audio-Werte für Debugging
     //private val audioDataList = mutableListOf<Short>()
@@ -96,10 +99,51 @@ class MainActivity : AppCompatActivity() {
         val timeOutBar = findViewById<SeekBar>(R.id.timeOutBar)
         val editTimeOut = findViewById<EditText>(R.id.editTimeOut)
         timeOutBar.progress = minSilenceDuration
-        settingsButton = findViewById(R.id.settingsButton)
 
-        //Textview für Debugging zum Anzeigen der Intervalle
+        //Textviews für Debugging zum Anzeigen der Intervalle und des Abminderungsfaktors
         timeStamp = findViewById(R.id.testTimeStamps)
+        factorTextView = findViewById(R.id.factor)
+        dataButton = findViewById(R.id.dataButton)
+
+        // Button zum Anzeigen der Intervalle und des Abminderungsfaktors
+        dataButton.setOnClickListener {
+            if (isDataButtonClicked){
+                isDataButtonClicked = false
+                resultTextView.visibility = View.VISIBLE
+                resultValueTextView.visibility = View.VISIBLE
+                startButton.visibility = View.VISIBLE
+                volumeTextView.visibility = View.VISIBLE
+                volumeProgressBar.visibility = View.VISIBLE
+                volumeResult.visibility = View.VISIBLE
+                sensitivityBar.visibility = View.VISIBLE
+                editSensitivity.visibility = View.VISIBLE
+                timeOutBar.visibility = View.VISIBLE
+                editTimeOut.visibility = View.VISIBLE
+
+                //Für Debugging Anzeige der aufgenommenen Intervalle
+                timeStamp.visibility = View.GONE
+                factorTextView.visibility = View.GONE
+            }
+            else{
+                isDataButtonClicked = true
+                resultTextView.visibility = View.GONE
+                resultValueTextView.visibility = View.GONE
+                startButton.visibility = View.GONE
+                stopButton.visibility = View.GONE
+                volumeTextView.visibility = View.GONE
+                volumeProgressBar.visibility = View.GONE
+                volumeResult.visibility = View.GONE
+                sensitivityBar.visibility = View.GONE
+                editSensitivity.visibility = View.GONE
+                timeOutBar.visibility = View.GONE
+                editTimeOut.visibility = View.GONE
+                stopAudioRecording()
+
+                //Für Debugging Anzeige der aufgenommenen Intervalle
+                timeStamp.visibility = View.VISIBLE
+                factorTextView.visibility = View.VISIBLE
+            }
+        }
 
 
         // Button zum Starten der Aufnahme
@@ -226,9 +270,6 @@ class MainActivity : AppCompatActivity() {
                 editSensitivity.visibility = View.VISIBLE
                 timeOutBar.visibility = View.VISIBLE
                 editTimeOut.visibility = View.VISIBLE
-
-                //Für Debugging Anzeige der aufgenommenen Intervalle
-                timeStamp.visibility = View.GONE
             }
             else{
                 isHelpClicked = true
@@ -244,9 +285,6 @@ class MainActivity : AppCompatActivity() {
                 timeOutBar.visibility = View.GONE
                 editTimeOut.visibility = View.GONE
                 stopAudioRecording()
-
-                //Für Debugging Anzeige der aufgenommenen Intervalle
-                timeStamp.visibility = View.VISIBLE
             }
         }
     }
@@ -263,9 +301,16 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                0
+            )
+            resultTextView.text =getString(R.string.permissionPermanentlyDeclined)
+            stopButton.performClick()
             return
         } else {
+            resultTextView.text = getString(R.string.resultTextView)
             AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 sampleRate,
@@ -273,6 +318,7 @@ class MainActivity : AppCompatActivity() {
                 audioFormat,
                 bufferSize
             )
+
         }
 
         val audioBuffer = ShortArray(bufferSize)
@@ -385,7 +431,6 @@ class MainActivity : AppCompatActivity() {
 
             val batteryStatus = getBatteryStatus(factor)
 
-
             // Zeige die Intervalle auf dem Bildschirm an
             runOnUiThread {
                 resultValueTextView.visibility =View.VISIBLE
@@ -402,6 +447,7 @@ class MainActivity : AppCompatActivity() {
                 timeStamp.text = "$interval1 ns, $interval2 ns"
 
                 stopButton.performClick()
+                factorTextView.text = "${factor.round(2)}"
             }
         }
     }
@@ -412,14 +458,19 @@ class MainActivity : AppCompatActivity() {
                 return text
             }
         }
-        // Standardwert, falls kein passender Bereich gefunden wurde
+        // falls bei Berechnung ein unrealistischer Wert errechnet wird
         return getString(R.string.unknownResult)
+    }
+
+    fun Double.round(decimals: Int): Double {
+        var multiplier = 1.0
+        repeat(decimals) { multiplier *= 10 }
+        return round(this * multiplier) / multiplier
     }
 }
 
 
 //TODO Hilfetext schreiben
-//TODO Permission Funktionen einbauen?
 //TODO APK auf Handys allgemein <-- Hilfetext mit Berechtigungsproblemen!
 //TODO Abfrage welche Batterien es sind (AA, AAA, 9V Blöcke)
 //TODO App Icon Drawable?
