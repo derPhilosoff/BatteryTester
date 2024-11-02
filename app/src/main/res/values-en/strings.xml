@@ -28,19 +28,19 @@
         events and compares them to each other. The resulting relation is called reduction factor.\n
         The reduction factor of a AA primary cell is specific to it\'s charge and constant.
         By the use of this fact you can directly relate the reduction factor to the remaining
-        charge of a primary cell. \n
+        charge of a primary cell. \n \n
         To use the app it needs the permission to use the device\'s microphone. If the
         permission to use the microphone is permanently declined you need to manually give it via
         the system settings. To do that go to your settings, find apps, look for the app
         \"BatteryTester" and tap on it. There you should find the permissions tab and tap on
         microphone permissions. You need to set it to either "Allow only while using the app" or
-        "Ask every time".
+        "Ask every time". \n \n
         After that you can tap the Start button in the middle of the screen to start recording.
-        The recording will stop automatically after three identified sound events.\n
+        The recording will stop automatically after three identified sound events.\n \n
         If there is too much noise, you can change the microphone sensitivity by dragging the
         upper searchbar.
-        If the bounces of the primary cell happen too fast for the app to register, you can use\
-        the second searchbar to reduce the time needed to detect a new impact.\n
+        If the bounces of the primary cell happen too fast for the app to register, you can use
+        the second searchbar to reduce the time needed to detect a new impact.\n \n
         To see the recorded data you can tap the Data button.
         It will show the measured intervals in nanoseconds and the calculated reduction factor below them.</string>
 </resources>

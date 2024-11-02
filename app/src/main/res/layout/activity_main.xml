@@ -194,7 +194,7 @@
 
     <TextView
         android:id="@+id/sensitivityUnit"
-        android:layout_width="67dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:background="@drawable/rounded_bottom_right_corner"
         android:text="@string/sensitivityUnit"
@@ -207,13 +207,14 @@
     <EditText
         android:id="@+id/editSensitivity"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginBottom="40dp"
         android:background="@drawable/rounded_bottom_left_corner"
         android:hint="@string/micSensitivityHint"
         android:inputType="number"
         android:maxLength="2"
         android:textAlignment="center"
+        android:textSize="16sp"
         android:textColor="@color/textPrimary"
         android:textColorHint="@color/textPrimary"
         app:layout_constraintBottom_toTopOf="@+id/timeOutBar"
@@ -223,7 +224,7 @@
 
     <TextView
         android:id="@+id/timeOutUnit"
-        android:layout_width="67dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:background="@drawable/rounded_bottom_right_corner"
         android:text="@string/timeOutUnit"
@@ -236,13 +237,14 @@
     <EditText
         android:id="@+id/editTimeOut"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginBottom="60dp"
         android:background="@drawable/rounded_bottom_left_corner"
         android:hint="@string/timeoutHint"
         android:inputType="number"
         android:maxLength="3"
         android:textAlignment="center"
+        android:textSize="16sp"
         android:textColor="@color/textPrimary"
         android:textColorHint="@color/textPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -262,16 +264,18 @@
 
     <TextView
         android:id="@+id/helpText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:background="@drawable/rounded_corner"
-        android:visibility="gone"
         android:padding="8sp"
+        android:scrollbars="vertical"
+        android:maxLines="16"
         android:text="@string/helpText"
         android:textAlignment="center"
         android:textColor="@color/textPrimary"
-        android:textSize="14sp"
-        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appName" />

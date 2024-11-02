@@ -23,27 +23,27 @@
         bitte in den Einstellungen die Erlaubnis zur Nutzung erteilen und dann
         erneut versuchen</string>
     <string name="data">Daten</string>
-    <string name="intervals">Intervals</string>
+    <string name="intervals">Intervalle</string>
     <string name="factor">Faktor</string>
     <string name="helpText">Diese App misst die Zeitabstände von drei Schallereignissen
         und setzt diese zueinander in ein Verhältnis. Dieses Verhältnis wird als
-        Abminderungsfaktor bezeichnet. \n
+        Abminderungsfaktor bezeichnet. \n \n
         Der Abminderungsfaktor einer AA Primärzellenbatterie ist für den jeweiligen
         Ladezustand spezifisch und konstant. Durch diesen Abminderungsfaktor kann somit direkt auf
-        den Ladungsstand einer Batterie geschlossen werden. \n
+        den Ladungsstand einer Batterie geschlossen werden. \n \n
         Die App benötigt dafür den Zugriff auf das Mikrofon des Geräts. Falls die Berechtigung
         permanent abgelehnt sein sollte, muss sie manuell in den Eistellungen des Geräts wieder
         gegeben werden. Hierzu muss man die Einstellungen öffnen, nach Apps suchen, die App
         "Batterietester" finden und antippen. Danach auf Berechtigungen, Mikrofonberechtigung
         und den Zugriff entweder auf "Zugriff während der Nutzung der App erlauben" oder
-        "Jedes mal fragen" setzen. Danach kann man mithilfe des Start Buttons in der Mitte
-        des Screens die Aufnahme starten.\n
-        Die Aufnahme stoppt automatisch nach drei identifizierten Schallereignissen. \n
+        "Jedes mal fragen" setzen.\n
+        Danach kann man mithilfe des Start Buttons in der Mitte des Screens die Aufnahme starten.\n
+        Die Aufnahme stoppt automatisch nach drei identifizierten Schallereignissen. \n \n
         Falls die Störgeräusche zu laut sind, kann mithilfe der oberen Leiste
-        die Mikrofonempfindlichkeit angepasst werden. \n
+        die Mikrofonempfindlichkeit angepasst werden. \n \n
         Falls die Aufpraller der Batterie zu nah beieinander sind kann
         mithilfe der unteren Leiste der Timer zur
-        Erkennnung von Aufprallern verringert werden.\n
+        Erkennnung von Aufprallern verringert werden.\n \n
         Mithilfe des Daten Buttons können die gemessenen Werte betrachtet werden.
         Oben stehen die gemessenen Intervalle in Nanosekunden, darunter der daraus berechnete Abminderungsfaktor.</string>
 </resources>

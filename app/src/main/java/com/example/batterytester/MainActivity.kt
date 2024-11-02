@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -93,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         stopButton = findViewById(R.id.stopButton)
         helpButton = findViewById(R.id.helpButton)
         helpText = findViewById(R.id.helpText)
+        helpText.movementMethod = ScrollingMovementMethod()
         resultTextView = findViewById(R.id.resultTextView)
         resultValueTextView = findViewById(R.id.resultValueTextView)
         val sensitivityBar = findViewById<SeekBar>(R.id.sensitivityBar)
@@ -297,7 +299,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun startAudioRecording() {
         val sampleRate = 48000
         val channelConfig = AudioFormat.CHANNEL_IN_MONO
@@ -476,10 +477,4 @@ class MainActivity : AppCompatActivity() {
         return round(this * multiplier) / multiplier
     }
 }
-
-
-//TODO Hilfetext schreiben
-//TODO APK auf Handys allgemein <-- Hilfetext mit Berechtigungsproblemen!
-//TODO Abfrage welche Batterien es sind (AA, AAA, 9V Blöcke)
 //TODO App Icon Drawable?
-//TODO Batterie verhält sich anders wenn frisch entladen, bei anderen Temperaturen <-- Help Text!
