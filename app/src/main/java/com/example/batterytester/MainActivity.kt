@@ -293,6 +293,8 @@ class MainActivity : AppCompatActivity() {
                 timeOutBar.visibility = View.GONE
                 editTimeOut.visibility = View.GONE
                 dataButton.visibility = View.GONE
+                timeStamp.visibility = View.GONE
+                factorTextView.visibility = View.GONE
                 helpText.visibility = View.VISIBLE
                 stopAudioRecording()
             }
@@ -358,11 +360,12 @@ class MainActivity : AppCompatActivity() {
                         // Erkenne Peaks anhand der Lautstärke
                         detectPeak(volumeLevelDb)
                         // Aktualisiere die Lautstärke im UI-Thread
-                        runOnUiThread {
-                            volumeResult.text = "${volumeLevelDb.roundToInt()}"
-                            volumeProgressBar.progress = volumeLevelDb.roundToInt()
-                        }
                     }.start()
+
+                    runOnUiThread {
+                        volumeResult.text = "${volumeLevelDb.roundToInt()}"
+                        volumeProgressBar.progress = volumeLevelDb.roundToInt()
+                    }
                 }
             }
             // Beenden der Aufnahme und Freigeben der Ressourcen
@@ -411,7 +414,6 @@ class MainActivity : AppCompatActivity() {
         if (volumeLevelDb > noiseThreshold) {
             val currentTimestamp = SystemClock.elapsedRealtimeNanos()
 
-
             // Stelle sicher, dass eine gewisse Stille seit dem letzten Ereignis vergangen ist
             if (currentTimestamp - lastPeakTimestamp > minSilenceDuration) {
                 lastPeakTimestamp = currentTimestamp
@@ -435,8 +437,7 @@ class MainActivity : AppCompatActivity() {
             val interval1 : Long = peakTimestamps[1] - peakTimestamps[0]
             val interval2 : Long = peakTimestamps[2] - peakTimestamps[1]
 
-
-            val factor : Double = interval2.toDouble() / interval1.toDouble()
+            val factor : Long = interval2 / interval1
 
             val batteryStatus = getBatteryStatus(factor)
 
@@ -445,7 +446,7 @@ class MainActivity : AppCompatActivity() {
                 resultValueTextView.visibility =View.VISIBLE
                 if (batteryStatus == getString(R.string.unknownResult)){
                     resultTextView.text = getString(R.string.resultTextViewErr)
-                    resultValueTextView.text = " "
+                    resultValueTextView.text = ""
                 }
                 else{
                     resultTextView.text = getString(R.string.resultTextViewSecondary)
@@ -456,14 +457,14 @@ class MainActivity : AppCompatActivity() {
                 timeStamp.text = "$interval1 ns, $interval2 ns"
 
                 stopButton.performClick()
-                factorTextView.text = "${factor.round(4)}"
+                factorTextView.text = "${factor.toDouble().round(4)}"
             }
         }
     }
 
-    private fun getBatteryStatus(value: Double): String {
+    private fun getBatteryStatus(value: Long): String {
         for ((range, text) in faktorLadung) {
-            if (value in range) {
+            if (value.toDouble() in range) {
                 return text
             }
         }
@@ -471,7 +472,7 @@ class MainActivity : AppCompatActivity() {
         return getString(R.string.unknownResult)
     }
 
-    fun Double.round(decimals: Int): Double {
+    private fun Double.round(decimals: Int): Double {
         var multiplier = 1.0
         repeat(decimals) { multiplier *= 10 }
         return round(this * multiplier) / multiplier

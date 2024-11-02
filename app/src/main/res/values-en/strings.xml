@@ -14,7 +14,7 @@
     <string name="sensitivityUnit">dB</string>
     <string name="timeOutUnit">ms</string>
     <string name="resultValueTextView"> </string>
-    <string name="resultTextViewSecondary">"Battery charge is approx.: "</string>
+    <string name="resultTextViewSecondary">"Battery charge is approx.:"</string>
     <string name="unknownResult">Unknown battery charge</string>
     <string name="resultTextViewErr">Error! Please try again.</string>
     <string name="permissionAudio">This app needs the permission to use your microphone
