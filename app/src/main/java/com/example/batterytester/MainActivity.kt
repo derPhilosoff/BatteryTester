@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     //Flag um das Hilfemenü umzuschalten
     private var isHelpClicked = false
+    private lateinit var helpText : TextView
 
     // AudioRecord und UI-Komponenten
     private lateinit var volumeTextView: TextView
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         startButton = findViewById(R.id.startButton)
         stopButton = findViewById(R.id.stopButton)
         helpButton = findViewById(R.id.helpButton)
+        helpText = findViewById(R.id.helpText)
         resultTextView = findViewById(R.id.resultTextView)
         resultValueTextView = findViewById(R.id.resultValueTextView)
         val sensitivityBar = findViewById<SeekBar>(R.id.sensitivityBar)
@@ -99,6 +101,8 @@ class MainActivity : AppCompatActivity() {
         val timeOutBar = findViewById<SeekBar>(R.id.timeOutBar)
         val editTimeOut = findViewById<EditText>(R.id.editTimeOut)
         timeOutBar.progress = minSilenceDuration
+
+
 
         //Textviews für Debugging zum Anzeigen der Intervalle und des Abminderungsfaktors
         timeStamp = findViewById(R.id.testTimeStamps)
@@ -119,8 +123,6 @@ class MainActivity : AppCompatActivity() {
                 editSensitivity.visibility = View.VISIBLE
                 timeOutBar.visibility = View.VISIBLE
                 editTimeOut.visibility = View.VISIBLE
-
-                //Für Debugging Anzeige der aufgenommenen Intervalle
                 timeStamp.visibility = View.GONE
                 factorTextView.visibility = View.GONE
             }
@@ -156,6 +158,7 @@ class MainActivity : AppCompatActivity() {
                 timeOutBar.isEnabled = false
                 editTimeOut.isEnabled = false
                 helpButton.isEnabled = false
+                dataButton.isEnabled = false
                 startAudioRecording()
         }
 
@@ -169,6 +172,7 @@ class MainActivity : AppCompatActivity() {
             editSensitivity.isEnabled = true
             timeOutBar.isEnabled = true
             editTimeOut.isEnabled = true
+            dataButton.isEnabled = true
             helpButton.isEnabled = true
         }
 
@@ -270,6 +274,8 @@ class MainActivity : AppCompatActivity() {
                 editSensitivity.visibility = View.VISIBLE
                 timeOutBar.visibility = View.VISIBLE
                 editTimeOut.visibility = View.VISIBLE
+                dataButton.visibility = View.VISIBLE
+                helpText.visibility = View.GONE
             }
             else{
                 isHelpClicked = true
@@ -284,6 +290,8 @@ class MainActivity : AppCompatActivity() {
                 editSensitivity.visibility = View.GONE
                 timeOutBar.visibility = View.GONE
                 editTimeOut.visibility = View.GONE
+                dataButton.visibility = View.GONE
+                helpText.visibility = View.VISIBLE
                 stopAudioRecording()
             }
         }
@@ -447,7 +455,7 @@ class MainActivity : AppCompatActivity() {
                 timeStamp.text = "$interval1 ns, $interval2 ns"
 
                 stopButton.performClick()
-                factorTextView.text = "${factor.round(2)}"
+                factorTextView.text = "${factor.round(4)}"
             }
         }
     }
