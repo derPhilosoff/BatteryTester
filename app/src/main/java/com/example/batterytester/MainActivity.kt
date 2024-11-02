@@ -477,4 +477,3 @@ class MainActivity : AppCompatActivity() {
         return round(this * multiplier) / multiplier
     }
 }
-//TODO App Icon Drawable?

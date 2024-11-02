@@ -42,5 +42,8 @@
         If the bounces of the primary cell happen too fast for the app to register, you can use
         the second searchbar to reduce the time needed to detect a new impact.\n \n
         To see the recorded data you can tap the Data button.
-        It will show the measured intervals in nanoseconds and the calculated reduction factor below them.</string>
+        It will show the measured intervals in nanoseconds and the calculated reduction factor below them.
+
+        App icon by Ranah Pixel Studios at:
+        https://www.flaticon.com/de/kostenloses-icon/oko-batterie_6556766</string>
 </resources>
