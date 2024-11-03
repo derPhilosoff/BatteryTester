@@ -72,13 +72,13 @@ class MainActivity : AppCompatActivity() {
     // Zeitpunkte der Peaks
     private val peakTimestamps = mutableListOf<Long>()
 
-    // Schwellenwert, um ein Klatschen zu erkennen (Amplitude)
+    // Schwellenwert, um ein Ereignis zu erkennen (Amplitude)
     private var noiseThreshold = 50
 
-    // Zeitfenster für Stille nach einem Klatschen, um ein weiteres Klatschen zu erkennen (in Millisekunden)
+    // Zeitfenster für Stille nach einem Ereignis, um ein Weiteres zu erkennen (in Millisekunden)
     private var minSilenceDuration = 20
 
-    // Letzter Zeitpunkt, an dem ein Klatschen erkannt wurde
+    // Letzter Zeitpunkt, an dem ein Ereignis erkannt wurde
     private var lastPeakTimestamp: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,10 +103,6 @@ class MainActivity : AppCompatActivity() {
         val timeOutBar = findViewById<SeekBar>(R.id.timeOutBar)
         val editTimeOut = findViewById<EditText>(R.id.editTimeOut)
         timeOutBar.progress = minSilenceDuration
-
-
-
-        //Textviews für Debugging zum Anzeigen der Intervalle und des Abminderungsfaktors
         timeStamp = findViewById(R.id.testTimeStamps)
         factorTextView = findViewById(R.id.factor)
         dataButton = findViewById(R.id.dataButton)
@@ -142,8 +138,6 @@ class MainActivity : AppCompatActivity() {
                 timeOutBar.visibility = View.GONE
                 editTimeOut.visibility = View.GONE
                 stopAudioRecording()
-
-                //Für Debugging Anzeige der aufgenommenen Intervalle
                 timeStamp.visibility = View.VISIBLE
                 factorTextView.visibility = View.VISIBLE
             }
@@ -442,7 +436,6 @@ class MainActivity : AppCompatActivity() {
             val batteryStatus = getBatteryStatus(factor)
 
             // Zeige die Intervalle auf dem Bildschirm an
-            runOnUiThread {
                 resultValueTextView.visibility =View.VISIBLE
                 if (batteryStatus == getString(R.string.unknownResult)){
                     resultTextView.text = getString(R.string.resultTextViewErr)
@@ -458,7 +451,6 @@ class MainActivity : AppCompatActivity() {
 
                 stopButton.performClick()
                 factorTextView.text = "${factor.toDouble().round(4)}"
-            }
         }
     }
 
