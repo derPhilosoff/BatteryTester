@@ -1,1 +1,3 @@
-There will be a description for this project soon
+This app was coded during a student research project and is meant to record the audiodata of a falling primary cell type AA on a solid surface, measure the time between the first three impacts and calculate a factor, that describes how much lower the time between the second and third impact was compared to the first and second one. Based on the research of a prior student research project, this factor can be directly linked to the charge of the primary cell.
+Unfortunately, at the moment the measurement between impacts is not precise enough, to get realistic results.
+App will be improved in the future by changing the measurement and analysis processes from real-time analysis of the audiostream to first recording the audio, saving it as a file (type not yet clear) and analyzing the data afterwards.
