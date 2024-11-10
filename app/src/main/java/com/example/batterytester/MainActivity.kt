@@ -10,6 +10,7 @@ import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -161,15 +162,16 @@ class MainActivity : AppCompatActivity() {
         // Button zum Stoppen der Aufnahme
         stopButton.visibility = View.GONE
         stopButton.setOnClickListener {
+            stopAudioRecording()
             stopButton.visibility = View.GONE
             startButton.visibility = View.VISIBLE
-            stopAudioRecording()
             sensitivityBar.isEnabled = true
             editSensitivity.isEnabled = true
             timeOutBar.isEnabled = true
             editTimeOut.isEnabled = true
             dataButton.isEnabled = true
             helpButton.isEnabled = true
+
         }
 
 
@@ -435,7 +437,9 @@ class MainActivity : AppCompatActivity() {
 
             val batteryStatus = getBatteryStatus(factor)
 
-            // Zeige die Intervalle auf dem Bildschirm an
+
+            runOnUiThread {
+                // Zeige die Intervalle auf dem Bildschirm an
                 resultValueTextView.visibility =View.VISIBLE
                 if (batteryStatus == getString(R.string.unknownResult)){
                     resultTextView.text = getString(R.string.resultTextViewErr)
@@ -445,12 +449,24 @@ class MainActivity : AppCompatActivity() {
                     resultTextView.text = getString(R.string.resultTextViewSecondary)
                     resultValueTextView.text = batteryStatus
                 }
+            }
 
-                //Anzeigen der gemessenen Intervalle in Nanosekunden für Debugging
-                timeStamp.text = "$interval1 ns, $interval2 ns"
 
+            //Anzeigen der gemessenen Intervalle in Nanosekunden für Debugging
+            timeStamp.text = "$interval1 ns, $interval2 ns"
+
+            //Anzeigen des berechneten Faktors
+            factorTextView.text = "${factor.toDouble().round(4)}"
+
+
+            //TODO something doesn't work and I am struggling to find out what or why
+            try {
                 stopButton.performClick()
-                factorTextView.text = "${factor.toDouble().round(4)}"
+            }
+            catch (e:Exception){
+                Log.e("Error", "Exception in onClick: ${e.message}")
+            }
+
         }
     }
 
